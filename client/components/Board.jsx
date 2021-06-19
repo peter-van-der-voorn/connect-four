@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { addToken } from './utils'
+import React, { useEffect, useState } from 'react'
+import { addToken, checkForWin } from './utils'
 
 import Cell from './Cell'
 
@@ -15,27 +15,31 @@ const initialBoardState = [
   [0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 2, 0],
-  [0, 0, 0, 0, 2, 1, 1],
-  [0, 0, 2, 2, 1, 1, 1]
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0]
 ]
 
 function Board () {
   const [gameState, setGameState] = useState(initialGameState)
   const [boardState, setBoardState] = useState(initialBoardState)
 
-  function handleClick (row, col) {
-    console.log(`You clicked a cell at ${row}, ${col}`)
-
-    if (gameState.currentPlayer === gameState.computer) {
-      // disables consequence of clicking if it is computers turn]
-
-      return
+  useEffect(() => {
+    if (checkForWin(boardState, gameState.currentPlayer)) {
+      console.log('game over!')
     }
+  })
+
+  function handleClick (row, col) {
+    // if (gameState.currentPlayer === gameState.computer) {
+    //   // disables consequence of clicking if it is computers turn]
+    //   return
+    // }
     addToken(col, gameState.currentPlayer, setBoardState, boardState)
+
     setGameState({
       ...gameState,
-      currentPlayer: gameState.computer
+      currentPlayer: gameState.currentPlayer === 1 ? 2 : 1
     })
   }
 

@@ -174,7 +174,7 @@ var initialGameState = {
   gameOver: false,
   message: ''
 };
-var initialBoardState = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 2, 0], [0, 0, 0, 0, 2, 1, 1], [0, 0, 2, 2, 1, 1, 1]];
+var initialBoardState = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]];
 
 function Board() {
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(initialGameState),
@@ -187,17 +187,20 @@ function Board() {
       boardState = _useState4[0],
       setBoardState = _useState4[1];
 
-  function handleClick(row, col) {
-    console.log("You clicked a cell at ".concat(row, ", ").concat(col));
-
-    if (gameState.currentPlayer === gameState.computer) {
-      // disables consequence of clicking if it is computers turn]
-      return;
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    if ((0,_utils__WEBPACK_IMPORTED_MODULE_1__.checkForWin)(boardState, gameState.currentPlayer)) {
+      console.log('game over!');
     }
+  });
 
+  function handleClick(row, col) {
+    // if (gameState.currentPlayer === gameState.computer) {
+    //   // disables consequence of clicking if it is computers turn]
+    //   return
+    // }
     (0,_utils__WEBPACK_IMPORTED_MODULE_1__.addToken)(col, gameState.currentPlayer, setBoardState, boardState);
     setGameState(_objectSpread(_objectSpread({}, gameState), {}, {
-      currentPlayer: gameState.computer
+      currentPlayer: gameState.currentPlayer === 1 ? 2 : 1
     }));
   }
 
@@ -494,7 +497,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "findLowestCell": () => (/* binding */ findLowestCell),
 /* harmony export */   "addToken": () => (/* binding */ addToken),
-/* harmony export */   "handleClick": () => (/* binding */ handleClick)
+/* harmony export */   "checkForWin": () => (/* binding */ checkForWin)
 /* harmony export */ });
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
@@ -512,12 +515,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function findLowestCell(col, boardState) {
   for (var row = 0; row < boardState.length; row++) {
     if (boardState[row][col] !== 0) {
-      console.log(row - 1);
       return row - 1;
     }
 
     if (row === 5) {
-      console.log(5);
       return 5;
     }
   }
@@ -538,9 +539,68 @@ function addToken(col, colour, setBoardState, boardState) {
     return board;
   });
 }
-function handleClick(row, col, initialGameState, setBoardState, boardState) {
-  console.log("You clicked a cell at ".concat(row, ", ").concat(col));
-  addToken(col, initialGameState.player, setBoardState, boardState);
+function checkForWin(boardState, colour) {
+  return checkHorizontalWin(boardState, colour) || checkVerticalWin(boardState, colour) || checkDiagonalDescending(boardState, colour) || checkDiagonalAscending(boardState, colour);
+}
+
+function checkHorizontalWin(boardState, colour) {
+  var count = 0;
+
+  for (var i = 0; i < boardState.length; i++) {
+    for (var j = 0; j < boardState[0].length; j++) {
+      if (boardState[i][j] === colour) {
+        count += 1;
+
+        if (count === 4) {
+          return true;
+        }
+      } else {
+        count = 0;
+      }
+    }
+
+    count = 0;
+  }
+}
+
+function checkVerticalWin(boardState, colour) {
+  var count = 0;
+
+  for (var col = 0; col < boardState[0].length; col++) {
+    for (var row = 0; row < boardState.length; row++) {
+      if (boardState[row][col] === colour) {
+        count += 1;
+
+        if (count === 4) {
+          return true;
+        }
+      } else {
+        count = 0;
+      }
+    }
+
+    count = 0;
+  }
+}
+
+function checkDiagonalDescending(boardState, colour) {
+  for (var row = 0; row <= boardState.length - 4; row++) {
+    for (var col = 0; col <= boardState[0].length - 4; col++) {
+      if (boardState[row][col] === colour && boardState[row + 1][col + 1] === colour && boardState[row + 2][col + 2] === colour && boardState[row + 3][col + 3] === colour) {
+        return true;
+      }
+    }
+  }
+}
+
+function checkDiagonalAscending(boardState, colour) {
+  for (var row = 3; row < boardState.length; row++) {
+    for (var col = 0; col <= boardState[0].length - 4; col++) {
+      if (boardState[row][col] === colour && boardState[row - 1][col + 1] === colour && boardState[row - 2][col + 2] === colour && boardState[row - 3][col + 3] === colour) {
+        return true;
+      }
+    }
+  }
 }
 
 /***/ }),
