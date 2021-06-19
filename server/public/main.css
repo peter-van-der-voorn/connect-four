@@ -7,6 +7,9 @@ body {
 
 h1 {
     font-size: 100px;
+    margin-top: 30px;
+
+    margin-bottom: 10px;
 }
 
 .grid-container {
@@ -38,10 +41,5 @@ h1 {
     background-color: rgb(179, 16, 43);
     box-sizing: border-box;
     border: dashed 7px rgb(117, 11, 29)
-
-}
-
-.row-0.col-0.circle {
-    background-color: tomato;
 
 }

@@ -198,7 +198,7 @@ function Board() {
     if (gameState.currentPlayer === gameState.computer) {
       (0,_utils__WEBPACK_IMPORTED_MODULE_1__.computersTurn)(boardState, gameState, setBoardState, setGameState);
     }
-  }, [gameState]);
+  }, [gameState.currentPlayer]);
 
   function handleClick(row, col) {
     if (gameState.currentPlayer === gameState.computer) {
@@ -209,7 +209,9 @@ function Board() {
     (0,_utils__WEBPACK_IMPORTED_MODULE_1__.addToken)(col, gameState.player, setBoardState, boardState); // toggleTurn(gameState, setGameState)
   }
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", {
+    id: "message"
+  }, "Message will go here!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "grid-container"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
     state: boardState[0][0],
@@ -421,7 +423,7 @@ function Board() {
     row: 5,
     col: 6,
     handleClick: handleClick
-  }));
+  })));
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Board);
