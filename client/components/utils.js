@@ -94,3 +94,35 @@ function checkDiagonalAscending (boardState, colour) {
     }
   }
 }
+
+export function computersTurn (boardState, gameState, setBoardState, setGameState) {
+  let result = -1
+  let column = 0
+
+  setTimeout(() => {
+    do {
+      column = Math.floor(Math.random() * 7)
+      result = findLowestCell(column, boardState)
+    } while (result === -1)
+
+    addToken(column, gameState.computer, setBoardState, boardState)
+  }, 900)
+}
+
+export function toggleTurn (gameState, setGameState) {
+  let nextPlayer = 0
+  if (gameState.currentPlayer === 1) {
+    console.log('current player is ', gameState.currentPlayer)
+    console.log('changing turn to computer')
+    nextPlayer = 2
+  } else {
+    console.log('current player is ', gameState.currentPlayer)
+    console.log('changing turn to player')
+
+    nextPlayer = 1
+  }
+  setGameState({
+    ...gameState,
+    currentPlayer: nextPlayer
+  })
+}

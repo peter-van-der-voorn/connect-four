@@ -146,12 +146,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils */ "./client/components/utils.js");
 /* harmony import */ var _Cell__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Cell */ "./client/components/Cell.jsx");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -189,19 +183,30 @@ function Board() {
 
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     if ((0,_utils__WEBPACK_IMPORTED_MODULE_1__.checkForWin)(boardState, gameState.currentPlayer)) {
-      console.log('game over!');
+      console.log('game over!'); // TODO: implement gameOver function and call it here
+    } // add logic to stop turn changing on first render:
+    // i.e. if all cells in bottom row are empty
+
+
+    if (!boardState[5].every(function (cell) {
+      return cell === 0;
+    })) {
+      (0,_utils__WEBPACK_IMPORTED_MODULE_1__.toggleTurn)(gameState, setGameState);
     }
-  });
+  }, [boardState]);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    if (gameState.currentPlayer === gameState.computer) {
+      (0,_utils__WEBPACK_IMPORTED_MODULE_1__.computersTurn)(boardState, gameState, setBoardState, setGameState);
+    }
+  }, [gameState]);
 
   function handleClick(row, col) {
-    // if (gameState.currentPlayer === gameState.computer) {
-    //   // disables consequence of clicking if it is computers turn]
-    //   return
-    // }
-    (0,_utils__WEBPACK_IMPORTED_MODULE_1__.addToken)(col, gameState.currentPlayer, setBoardState, boardState);
-    setGameState(_objectSpread(_objectSpread({}, gameState), {}, {
-      currentPlayer: gameState.currentPlayer === 1 ? 2 : 1
-    }));
+    if (gameState.currentPlayer === gameState.computer) {
+      // disables consequence of clicking if it is computers turn]
+      return;
+    }
+
+    (0,_utils__WEBPACK_IMPORTED_MODULE_1__.addToken)(col, gameState.player, setBoardState, boardState); // toggleTurn(gameState, setGameState)
   }
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
@@ -497,8 +502,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "findLowestCell": () => (/* binding */ findLowestCell),
 /* harmony export */   "addToken": () => (/* binding */ addToken),
-/* harmony export */   "checkForWin": () => (/* binding */ checkForWin)
+/* harmony export */   "checkForWin": () => (/* binding */ checkForWin),
+/* harmony export */   "computersTurn": () => (/* binding */ computersTurn),
+/* harmony export */   "toggleTurn": () => (/* binding */ toggleTurn)
 /* harmony export */ });
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -601,6 +614,36 @@ function checkDiagonalAscending(boardState, colour) {
       }
     }
   }
+}
+
+function computersTurn(boardState, gameState, setBoardState, setGameState) {
+  var result = -1;
+  var column = 0;
+  setTimeout(function () {
+    do {
+      column = Math.floor(Math.random() * 7);
+      result = findLowestCell(column, boardState);
+    } while (result === -1);
+
+    addToken(column, gameState.computer, setBoardState, boardState);
+  }, 900);
+}
+function toggleTurn(gameState, setGameState) {
+  var nextPlayer = 0;
+
+  if (gameState.currentPlayer === 1) {
+    console.log('current player is ', gameState.currentPlayer);
+    console.log('changing turn to computer');
+    nextPlayer = 2;
+  } else {
+    console.log('current player is ', gameState.currentPlayer);
+    console.log('changing turn to player');
+    nextPlayer = 1;
+  }
+
+  setGameState(_objectSpread(_objectSpread({}, gameState), {}, {
+    currentPlayer: nextPlayer
+  }));
 }
 
 /***/ }),

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { addToken, checkForWin } from './utils'
+import { addToken, checkForWin, computersTurn, toggleTurn } from './utils'
 
 import Cell from './Cell'
 
@@ -27,20 +27,29 @@ function Board () {
   useEffect(() => {
     if (checkForWin(boardState, gameState.currentPlayer)) {
       console.log('game over!')
+      // TODO: implement gameOver function and call it here
     }
-  })
+    // add logic to stop turn changing on first render:
+    // i.e. if all cells in bottom row are empty
+    if (!boardState[5].every(cell => cell === 0)) {
+      toggleTurn(gameState, setGameState)
+    }
+  }, [boardState])
+
+  useEffect(() => {
+    if (gameState.currentPlayer === gameState.computer) {
+      computersTurn(boardState, gameState, setBoardState, setGameState)
+    }
+  }, [gameState])
 
   function handleClick (row, col) {
-    // if (gameState.currentPlayer === gameState.computer) {
-    //   // disables consequence of clicking if it is computers turn]
-    //   return
-    // }
-    addToken(col, gameState.currentPlayer, setBoardState, boardState)
+    if (gameState.currentPlayer === gameState.computer) {
+      // disables consequence of clicking if it is computers turn]
+      return
+    }
+    addToken(col, gameState.player, setBoardState, boardState)
 
-    setGameState({
-      ...gameState,
-      currentPlayer: gameState.currentPlayer === 1 ? 2 : 1
-    })
+    // toggleTurn(gameState, setGameState)
   }
 
   return (
