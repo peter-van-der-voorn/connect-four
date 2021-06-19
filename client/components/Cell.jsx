@@ -1,7 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 
-function Cell ({ state }) {
+function Cell ({ state, handleClick, row, col }) {
   const circleClass = classNames(
     'circle',
     {
@@ -16,7 +16,7 @@ function Cell ({ state }) {
 
   return (
     <div className={cellClass} >
-      <div className={circleClass} />
+      <div className={circleClass} onClick={() => handleClick(row, col)} />
     </div>
   )
 }

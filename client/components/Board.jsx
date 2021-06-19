@@ -1,87 +1,94 @@
 import React, { useState } from 'react'
+import { addToken } from './utils'
+
 import Cell from './Cell'
 
 const initialGameState = {
   player: 1,
   computer: 2,
-  currentPlayer: 2,
-  board: [
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 2, 0],
-    [0, 0, 0, 0, 2, 1, 1],
-    [0, 0, 2, 2, 1, 1, 1]
-  ],
+  currentPlayer: 1,
   gameOver: false,
   message: ''
 }
 
+const initialBoardState = [
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 2, 0],
+  [0, 0, 0, 0, 2, 1, 1],
+  [0, 0, 2, 2, 1, 1, 1]
+]
+
 function Board () {
   const [gameState, setGameState] = useState(initialGameState)
+  const [boardState, setBoardState] = useState(initialBoardState)
 
-  // const boardArray = []
+  function handleClick (row, col) {
+    console.log(`You clicked a cell at ${row}, ${col}`)
 
-  // for (let row = 0; row < 6; row++) {
-  //   boardArray.push([])
-  //   for (let col = 0; col < 7; col++) {
-  //     return (
+    if (gameState.currentPlayer === gameState.computer) {
+      // disables consequence of clicking if it is computers turn]
 
-  //       boardArray[row].push(<Cell state={gameState.board[{ row }][{ col }]} />)
-  //     )
-  //   }
-  // }
+      return
+    }
+    addToken(col, gameState.currentPlayer, setBoardState, boardState)
+    setGameState({
+      ...gameState,
+      currentPlayer: gameState.computer
+    })
+  }
 
   return (
     <div className="grid-container">
 
-      <Cell state={gameState.board[0][0]} />
-      <Cell state={gameState.board[0][1]} />
-      <Cell state={gameState.board[0][2]} />
-      <Cell state={gameState.board[0][3]} />
-      <Cell state={gameState.board[0][4]} />
-      <Cell state={gameState.board[0][5]} />
-      <Cell state={gameState.board[0][6]} />
+      <Cell state={boardState[0][0]} row={0} col={0} handleClick={handleClick} />
+      <Cell state={boardState[0][1]} row={0} col={1} handleClick={handleClick} />
+      <Cell state={boardState[0][2]} row={0} col={2} handleClick={handleClick} />
+      <Cell state={boardState[0][3]} row={0} col={3} handleClick={handleClick} />
+      <Cell state={boardState[0][4]} row={0} col={4} handleClick={handleClick} />
+      <Cell state={boardState[0][5]} row={0} col={5} handleClick={handleClick} />
+      <Cell state={boardState[0][6]} row={0} col={6} handleClick={handleClick} />
 
-      <Cell state={gameState.board[1][0]} />
-      <Cell state={gameState.board[1][1]} />
-      <Cell state={gameState.board[1][2]} />
-      <Cell state={gameState.board[1][3]} />
-      <Cell state={gameState.board[1][4]} />
-      <Cell state={gameState.board[1][5]} />
-      <Cell state={gameState.board[1][6]} />
+      <Cell state={boardState[1][0]} row={1} col={0} handleClick={handleClick} />
+      <Cell state={boardState[1][1]} row={1} col={1} handleClick={handleClick} />
+      <Cell state={boardState[1][2]} row={1} col={2} handleClick={handleClick} />
+      <Cell state={boardState[1][3]} row={1} col={3} handleClick={handleClick} />
+      <Cell state={boardState[1][4]} row={1} col={4} handleClick={handleClick} />
+      <Cell state={boardState[1][5]} row={1} col={5} handleClick={handleClick} />
+      <Cell state={boardState[1][6]} row={1} col={6} handleClick={handleClick} />
 
-      <Cell state={gameState.board[2][0]} />
-      <Cell state={gameState.board[2][1]} />
-      <Cell state={gameState.board[2][2]} />
-      <Cell state={gameState.board[2][3]} />
-      <Cell state={gameState.board[2][4]} />
-      <Cell state={gameState.board[2][5]} />
-      <Cell state={gameState.board[2][6]} />
+      <Cell state={boardState[2][0]} row={2} col={0} handleClick={handleClick} />
+      <Cell state={boardState[2][1]} row={2} col={1} handleClick={handleClick} />
+      <Cell state={boardState[2][2]} row={2} col={2} handleClick={handleClick} />
+      <Cell state={boardState[2][3]} row={2} col={3} handleClick={handleClick} />
+      <Cell state={boardState[2][4]} row={2} col={4} handleClick={handleClick} />
+      <Cell state={boardState[2][5]} row={2} col={5} handleClick={handleClick} />
+      <Cell state={boardState[2][6]} row={2} col={6} handleClick={handleClick} />
 
-      <Cell state={gameState.board[3][0]} />
-      <Cell state={gameState.board[3][1]} />
-      <Cell state={gameState.board[3][2]} />
-      <Cell state={gameState.board[3][3]} />
-      <Cell state={gameState.board[3][4]} />
-      <Cell state={gameState.board[3][5]} />
-      <Cell state={gameState.board[3][6]} />
+      <Cell state={boardState[3][0]} row={3} col={0} handleClick={handleClick} />
+      <Cell state={boardState[3][1]} row={3} col={1} handleClick={handleClick} />
+      <Cell state={boardState[3][2]} row={3} col={2} handleClick={handleClick} />
+      <Cell state={boardState[3][3]} row={3} col={3} handleClick={handleClick} />
+      <Cell state={boardState[3][4]} row={3} col={4} handleClick={handleClick} />
+      <Cell state={boardState[3][5]} row={3} col={5} handleClick={handleClick} />
+      <Cell state={boardState[3][6]} row={3} col={6} handleClick={handleClick} />
 
-      <Cell state={gameState.board[4][0]} />
-      <Cell state={gameState.board[4][1]} />
-      <Cell state={gameState.board[4][2]} />
-      <Cell state={gameState.board[4][3]} />
-      <Cell state={gameState.board[4][4]} />
-      <Cell state={gameState.board[4][5]} />
-      <Cell state={gameState.board[4][6]} />
+      <Cell state={boardState[4][0]} row={4} col={0} handleClick={handleClick} />
+      <Cell state={boardState[4][1]} row={4} col={1} handleClick={handleClick} />
+      <Cell state={boardState[4][2]} row={4} col={2} handleClick={handleClick} />
+      <Cell state={boardState[4][3]} row={4} col={3} handleClick={handleClick} />
+      <Cell state={boardState[4][4]} row={4} col={4} handleClick={handleClick} />
+      <Cell state={boardState[4][5]} row={4} col={5} handleClick={handleClick} />
+      <Cell state={boardState[4][6]} row={4} col={6} handleClick={handleClick} />
 
-      <Cell state={gameState.board[5][0]} />
-      <Cell state={gameState.board[5][1]} />
-      <Cell state={gameState.board[5][2]} />
-      <Cell state={gameState.board[5][3]} />
-      <Cell state={gameState.board[5][4]} />
-      <Cell state={gameState.board[5][5]} />
-      <Cell state={gameState.board[5][6]} />
+      <Cell state={boardState[5][0]} row={5} col={0} handleClick={handleClick} />
+      <Cell state={boardState[5][1]} row={5} col={1} handleClick={handleClick} />
+      <Cell state={boardState[5][2]} row={5} col={2} handleClick={handleClick} />
+      <Cell state={boardState[5][3]} row={5} col={3} handleClick={handleClick} />
+      <Cell state={boardState[5][4]} row={5} col={4} handleClick={handleClick} />
+      <Cell state={boardState[5][5]} row={5} col={5} handleClick={handleClick} />
+      <Cell state={boardState[5][6]} row={5} col={6} handleClick={handleClick} />
 
     </div>
   )

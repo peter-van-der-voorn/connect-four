@@ -115,15 +115,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Header */ "./client/components/Header.jsx");
-/* harmony import */ var _Board__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Board */ "./client/components/Board.jsx");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils */ "./client/components/utils.js");
+/* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Header */ "./client/components/Header.jsx");
+/* harmony import */ var _Board__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Board */ "./client/components/Board.jsx");
+
 
 
 
 
 
 function App() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Header__WEBPACK_IMPORTED_MODULE_1__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Board__WEBPACK_IMPORTED_MODULE_2__.default, null));
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Header__WEBPACK_IMPORTED_MODULE_2__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Board__WEBPACK_IMPORTED_MODULE_3__.default, null));
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
@@ -142,7 +144,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _Cell__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Cell */ "./client/components/Cell.jsx");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils */ "./client/components/utils.js");
+/* harmony import */ var _Cell__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Cell */ "./client/components/Cell.jsx");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -157,116 +166,253 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var initialGameState = {
   player: 1,
   computer: 2,
-  currentPlayer: 2,
-  board: [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 2, 0], [0, 0, 0, 0, 2, 1, 1], [0, 0, 2, 2, 1, 1, 1]],
+  currentPlayer: 1,
   gameOver: false,
   message: ''
 };
+var initialBoardState = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 2, 0], [0, 0, 0, 0, 2, 1, 1], [0, 0, 2, 2, 1, 1, 1]];
 
 function Board() {
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(initialGameState),
       _useState2 = _slicedToArray(_useState, 2),
       gameState = _useState2[0],
-      setGameState = _useState2[1]; // const boardArray = []
-  // for (let row = 0; row < 6; row++) {
-  //   boardArray.push([])
-  //   for (let col = 0; col < 7; col++) {
-  //     return (
-  //       boardArray[row].push(<Cell state={gameState.board[{ row }][{ col }]} />)
-  //     )
-  //   }
-  // }
+      setGameState = _useState2[1];
 
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(initialBoardState),
+      _useState4 = _slicedToArray(_useState3, 2),
+      boardState = _useState4[0],
+      setBoardState = _useState4[1];
+
+  function handleClick(row, col) {
+    console.log("You clicked a cell at ".concat(row, ", ").concat(col));
+
+    if (gameState.currentPlayer === gameState.computer) {
+      // disables consequence of clicking if it is computers turn]
+      return;
+    }
+
+    (0,_utils__WEBPACK_IMPORTED_MODULE_1__.addToken)(col, gameState.currentPlayer, setBoardState, boardState);
+    setGameState(_objectSpread(_objectSpread({}, gameState), {}, {
+      currentPlayer: gameState.computer
+    }));
+  }
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "grid-container"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[0][0]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[0][1]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[0][2]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[0][3]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[0][4]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[0][5]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[0][6]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[1][0]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[1][1]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[1][2]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[1][3]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[1][4]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[1][5]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[1][6]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[2][0]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[2][1]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[2][2]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[2][3]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[2][4]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[2][5]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[2][6]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[3][0]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[3][1]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[3][2]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[3][3]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[3][4]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[3][5]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[3][6]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[4][0]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[4][1]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[4][2]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[4][3]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[4][4]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[4][5]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[4][6]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[5][0]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[5][1]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[5][2]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[5][3]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[5][4]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[5][5]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_1__.default, {
-    state: gameState.board[5][6]
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[0][0],
+    row: 0,
+    col: 0,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[0][1],
+    row: 0,
+    col: 1,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[0][2],
+    row: 0,
+    col: 2,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[0][3],
+    row: 0,
+    col: 3,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[0][4],
+    row: 0,
+    col: 4,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[0][5],
+    row: 0,
+    col: 5,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[0][6],
+    row: 0,
+    col: 6,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[1][0],
+    row: 1,
+    col: 0,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[1][1],
+    row: 1,
+    col: 1,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[1][2],
+    row: 1,
+    col: 2,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[1][3],
+    row: 1,
+    col: 3,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[1][4],
+    row: 1,
+    col: 4,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[1][5],
+    row: 1,
+    col: 5,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[1][6],
+    row: 1,
+    col: 6,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[2][0],
+    row: 2,
+    col: 0,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[2][1],
+    row: 2,
+    col: 1,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[2][2],
+    row: 2,
+    col: 2,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[2][3],
+    row: 2,
+    col: 3,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[2][4],
+    row: 2,
+    col: 4,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[2][5],
+    row: 2,
+    col: 5,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[2][6],
+    row: 2,
+    col: 6,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[3][0],
+    row: 3,
+    col: 0,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[3][1],
+    row: 3,
+    col: 1,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[3][2],
+    row: 3,
+    col: 2,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[3][3],
+    row: 3,
+    col: 3,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[3][4],
+    row: 3,
+    col: 4,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[3][5],
+    row: 3,
+    col: 5,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[3][6],
+    row: 3,
+    col: 6,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[4][0],
+    row: 4,
+    col: 0,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[4][1],
+    row: 4,
+    col: 1,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[4][2],
+    row: 4,
+    col: 2,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[4][3],
+    row: 4,
+    col: 3,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[4][4],
+    row: 4,
+    col: 4,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[4][5],
+    row: 4,
+    col: 5,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[4][6],
+    row: 4,
+    col: 6,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[5][0],
+    row: 5,
+    col: 0,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[5][1],
+    row: 5,
+    col: 1,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[5][2],
+    row: 5,
+    col: 2,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[5][3],
+    row: 5,
+    col: 3,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[5][4],
+    row: 5,
+    col: 4,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[5][5],
+    row: 5,
+    col: 5,
+    handleClick: handleClick
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
+    state: boardState[5][6],
+    row: 5,
+    col: 6,
+    handleClick: handleClick
   }));
 }
 
@@ -292,7 +438,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function Cell(_ref) {
-  var state = _ref.state;
+  var state = _ref.state,
+      handleClick = _ref.handleClick,
+      row = _ref.row,
+      col = _ref.col;
   var circleClass = classnames__WEBPACK_IMPORTED_MODULE_1___default()('circle', {
     yellow: state === 1,
     red: state === 2
@@ -301,7 +450,10 @@ function Cell(_ref) {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: cellClass
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: circleClass
+    className: circleClass,
+    onClick: function onClick() {
+      return handleClick(row, col);
+    }
   }));
 }
 
@@ -328,6 +480,68 @@ function Header() {
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
+
+/***/ }),
+
+/***/ "./client/components/utils.js":
+/*!************************************!*\
+  !*** ./client/components/utils.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "findLowestCell": () => (/* binding */ findLowestCell),
+/* harmony export */   "addToken": () => (/* binding */ addToken),
+/* harmony export */   "handleClick": () => (/* binding */ handleClick)
+/* harmony export */ });
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+// Returns the lowest available cell. If column is full, returns -1
+function findLowestCell(col, boardState) {
+  for (var row = 0; row < boardState.length; row++) {
+    if (boardState[row][col] !== 0) {
+      console.log(row - 1);
+      return row - 1;
+    }
+
+    if (row === 5) {
+      console.log(5);
+      return 5;
+    }
+  }
+} // adds a token to the lowest available space in col
+
+function addToken(col, colour, setBoardState, boardState) {
+  var row = findLowestCell(col, boardState);
+
+  if (row === -1) {
+    return;
+  }
+
+  setBoardState(function (prevBoardState) {
+    var board = _toConsumableArray(prevBoardState);
+
+    board[row] = _toConsumableArray(board[row]);
+    board[row][col] = colour;
+    return board;
+  });
+}
+function handleClick(row, col, initialGameState, setBoardState, boardState) {
+  console.log("You clicked a cell at ".concat(row, ", ").concat(col));
+  addToken(col, initialGameState.player, setBoardState, boardState);
+}
 
 /***/ }),
 
