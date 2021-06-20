@@ -2,7 +2,7 @@ import React from 'react'
 
 function Header () {
   return (
-    <h1>Time to Play!</h1>
+    <h1>Let's Connect Four!</h1>
   )
 }
 

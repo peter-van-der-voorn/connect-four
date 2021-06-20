@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { addToken, checkForWin, computersTurn, toggleTurn } from './utils'
 
 import Cell from './Cell'
+import Message from './Message'
 
 const initialGameState = {
   player: 1,
@@ -23,10 +24,11 @@ const initialBoardState = [
 function Board () {
   const [gameState, setGameState] = useState(initialGameState)
   const [boardState, setBoardState] = useState(initialBoardState)
+  const [messageState, setMessageState] = useState("Let's Play!")
 
   useEffect(() => {
     if (checkForWin(boardState, gameState.currentPlayer)) {
-      console.log('game over!')
+      setMessageState('GAME OVER!')
 
       // TODO: implement gameOver function and call it here
     }
@@ -55,7 +57,7 @@ function Board () {
 
   return (
     <>
-      <h2 id="message">Message will go here!</h2>
+      <Message text={messageState} />
       <div className="grid-container">
 
         <Cell state={boardState[0][0]} row={0} col={0} handleClick={handleClick} />

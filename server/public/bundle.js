@@ -146,6 +146,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils */ "./client/components/utils.js");
 /* harmony import */ var _Cell__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Cell */ "./client/components/Cell.jsx");
+/* harmony import */ var _Message__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Message */ "./client/components/Message.jsx");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -157,6 +158,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -181,9 +183,14 @@ function Board() {
       boardState = _useState4[0],
       setBoardState = _useState4[1];
 
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("Let's Play!"),
+      _useState6 = _slicedToArray(_useState5, 2),
+      messageState = _useState6[0],
+      setMessageState = _useState6[1];
+
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     if ((0,_utils__WEBPACK_IMPORTED_MODULE_1__.checkForWin)(boardState, gameState.currentPlayer)) {
-      console.log('game over!'); // TODO: implement gameOver function and call it here
+      setMessageState('GAME OVER!'); // TODO: implement gameOver function and call it here
     } // add logic to stop turn changing on first render:
     // i.e. if all cells in bottom row are empty
 
@@ -209,9 +216,9 @@ function Board() {
     (0,_utils__WEBPACK_IMPORTED_MODULE_1__.addToken)(col, gameState.player, setBoardState, boardState); // toggleTurn(gameState, setGameState)
   }
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", {
-    id: "message"
-  }, "Message will go here!"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Message__WEBPACK_IMPORTED_MODULE_3__.default, {
+    text: messageState
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "grid-container"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Cell__WEBPACK_IMPORTED_MODULE_2__.default, {
     state: boardState[0][0],
@@ -486,10 +493,33 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function Header() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", null, "Time to Play!");
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", null, "Let's Connect Four!");
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
+
+/***/ }),
+
+/***/ "./client/components/Message.jsx":
+/*!***************************************!*\
+  !*** ./client/components/Message.jsx ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+
+function Message(_ref) {
+  var text = _ref.text;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, text);
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Message);
 
 /***/ }),
 
@@ -622,10 +652,18 @@ function computersTurn(boardState, gameState, setBoardState, setGameState) {
   var result = -1;
   var column = 0;
   setTimeout(function () {
-    do {
-      column = Math.floor(Math.random() * 7);
-      result = findLowestCell(column, boardState);
-    } while (result === -1);
+    var winningMove = checkForWinningMove(boardState, gameState);
+
+    if (winningMove) {
+      console.log(winningMove);
+      column = winningMove;
+    } else {
+      do {
+        console.log('finding random cell');
+        column = Math.floor(Math.random() * 7);
+        result = findLowestCell(column, boardState);
+      } while (result === -1);
+    }
 
     addToken(column, gameState.computer, setBoardState, boardState);
   }, 900);
@@ -634,12 +672,8 @@ function toggleTurn(gameState, setGameState) {
   var nextPlayer = 0;
 
   if (gameState.currentPlayer === 1) {
-    console.log('current player is ', gameState.currentPlayer);
-    console.log('changing turn to computer');
     nextPlayer = 2;
   } else {
-    console.log('current player is ', gameState.currentPlayer);
-    console.log('changing turn to player');
     nextPlayer = 1;
   }
 
@@ -647,6 +681,56 @@ function toggleTurn(gameState, setGameState) {
     currentPlayer: nextPlayer
   }));
 }
+
+function findAvailableColumns(boardState) {
+  var possibleMoves = []; // check the top row, if empty, push true to the array, otherwise false
+
+  boardState[0].forEach(function (col) {
+    col ? possibleMoves.push(false) : possibleMoves.push(true);
+  });
+  return possibleMoves;
+}
+
+function checkForWinningMove(boardState, gameState) {
+  var possibleMoves = findAvailableColumns(boardState);
+  console.log('Possible moves: ', possibleMoves);
+
+  var testBoard = _toConsumableArray(boardState);
+
+  for (var col = 0; col < testBoard[0].length; col++) {
+    if (possibleMoves[col]) {
+      console.log("col ".concat(col, " is availble"));
+
+      if (addTestToken(col, gameState.computer, testBoard)) {
+        console.log('adding a token into test array');
+        return col; // computer plays this column to win the game
+      }
+    }
+  }
+
+  return false;
+} // TODO: this function is adding tokens into the real board
+
+
+function addTestToken(col, colour, testBoard) {
+  var row = findLowestCell(col, testBoard);
+  testBoard[row][col] = colour;
+
+  if (checkForWin(testBoard, colour)) {
+    testBoard[row][col] = 0;
+    return true;
+  }
+
+  testBoard[row][col] = 0;
+  return false;
+} // ------Implementing some AI------
+// Step 1: determine how many columns are available to play
+// >> const possibleMoves = [col1, col2, col4, col5, col6]
+// Step 2: check if any of those options will cause computer to win, if so, make that move
+//
+// >> TODO:
+// Step 3: check if player could win next move, if so, block them
+// Step 4: check if any of those moves will allow player to win. if so, don't make that move.
 
 /***/ }),
 

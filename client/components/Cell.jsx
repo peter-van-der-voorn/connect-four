@@ -7,7 +7,6 @@ function Cell ({ state, handleClick, row, col }) {
     {
       yellow: (state === 1),
       red: (state === 2)
-
     })
 
   const cellClass = classNames(

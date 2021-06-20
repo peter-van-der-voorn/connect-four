@@ -100,10 +100,17 @@ export function computersTurn (boardState, gameState, setBoardState, setGameStat
   let column = 0
 
   setTimeout(() => {
-    do {
-      column = Math.floor(Math.random() * 7)
-      result = findLowestCell(column, boardState)
-    } while (result === -1)
+    const winningMove = checkForWinningMove(boardState, gameState)
+    if (winningMove) {
+      console.log(winningMove)
+      column = winningMove
+    } else {
+      do {
+        console.log('finding random cell')
+        column = Math.floor(Math.random() * 7)
+        result = findLowestCell(column, boardState)
+      } while (result === -1)
+    }
 
     addToken(column, gameState.computer, setBoardState, boardState)
   }, 900)
@@ -112,13 +119,8 @@ export function computersTurn (boardState, gameState, setBoardState, setGameStat
 export function toggleTurn (gameState, setGameState) {
   let nextPlayer = 0
   if (gameState.currentPlayer === 1) {
-    console.log('current player is ', gameState.currentPlayer)
-    console.log('changing turn to computer')
     nextPlayer = 2
   } else {
-    console.log('current player is ', gameState.currentPlayer)
-    console.log('changing turn to player')
-
     nextPlayer = 1
   }
   setGameState({
@@ -126,3 +128,50 @@ export function toggleTurn (gameState, setGameState) {
     currentPlayer: nextPlayer
   })
 }
+
+function findAvailableColumns (boardState) {
+  const possibleMoves = []
+  // check the top row, if empty, push true to the array, otherwise false
+  boardState[0].forEach(col => {
+    col ? possibleMoves.push(false) : possibleMoves.push(true)
+  })
+  return possibleMoves
+}
+
+function checkForWinningMove (boardState, gameState) {
+  const possibleMoves = findAvailableColumns(boardState)
+  console.log('Possible moves: ', possibleMoves)
+  const testBoard = [...boardState]
+
+  for (let col = 0; col < testBoard[0].length; col++) {
+    if (possibleMoves[col]) {
+      console.log(`col ${col} is availble`)
+      if (addTestToken(col, gameState.computer, testBoard)) {
+        console.log('adding a token into test array')
+        return col // computer plays this column to win the game
+      }
+    }
+  }
+  return false
+}
+
+// TODO: this function is adding tokens into the real board
+function addTestToken (col, colour, testBoard) {
+  const row = findLowestCell(col, testBoard)
+  testBoard[row][col] = colour
+  if (checkForWin(testBoard, colour)) {
+    testBoard[row][col] = 0
+    return true
+  }
+  testBoard[row][col] = 0
+  return false
+}
+
+// ------Implementing some AI------
+// Step 1: determine how many columns are available to play
+// >> const possibleMoves = [col1, col2, col4, col5, col6]
+// Step 2: check if any of those options will cause computer to win, if so, make that move
+//
+// >> TODO:
+// Step 3: check if player could win next move, if so, block them
+// Step 4: check if any of those moves will allow player to win. if so, don't make that move.
