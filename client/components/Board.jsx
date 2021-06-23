@@ -12,7 +12,7 @@ const initialGameState = {
   // message: ''
 }
 
-const initialBoardState = [
+const emptyBoardState = [
   [0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0],
@@ -21,20 +21,28 @@ const initialBoardState = [
   [0, 0, 0, 0, 0, 0, 0]
 ]
 
+const initialBoardState = [
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [1, 1, 0, 0, 0, 0, 0],
+  [1, 1, 1, 0, 0, 0, 0],
+  [1, 1, 1, 0, 1, 1, 1]
+]
+
 function Board () {
   const [gameState, setGameState] = useState(initialGameState)
-  const [boardState, setBoardState] = useState(initialBoardState)
+  const [boardState, setBoardState] = useState(emptyBoardState)
   const [messageState, setMessageState] = useState("Let's Play!")
 
   useEffect(() => {
     if (checkForWin(boardState, gameState.currentPlayer)) {
       gameOver(setGameState, setMessageState, gameState)
+    } else if (!boardState[5].every(cell => cell === 0)) {
+      toggleTurn(gameState, setGameState)
     }
     // add logic to stop turn changing on first render:
     // i.e. if all cells in bottom row are empty
-    if (!boardState[5].every(cell => cell === 0)) {
-      toggleTurn(gameState, setGameState)
-    }
   }, [boardState])
 
   useEffect(() => {

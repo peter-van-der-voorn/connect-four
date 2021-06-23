@@ -170,7 +170,8 @@ var initialGameState = {
   gameOver: false // message: ''
 
 };
-var initialBoardState = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]];
+var emptyBoardState = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]];
+var initialBoardState = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 1, 1, 1]];
 
 function Board() {
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(initialGameState),
@@ -178,7 +179,7 @@ function Board() {
       gameState = _useState2[0],
       setGameState = _useState2[1];
 
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(initialBoardState),
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(emptyBoardState),
       _useState4 = _slicedToArray(_useState3, 2),
       boardState = _useState4[0],
       setBoardState = _useState4[1];
@@ -191,15 +192,13 @@ function Board() {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     if ((0,_utils__WEBPACK_IMPORTED_MODULE_1__.checkForWin)(boardState, gameState.currentPlayer)) {
       (0,_utils__WEBPACK_IMPORTED_MODULE_1__.gameOver)(setGameState, setMessageState, gameState);
-    } // add logic to stop turn changing on first render:
-    // i.e. if all cells in bottom row are empty
-
-
-    if (!boardState[5].every(function (cell) {
+    } else if (!boardState[5].every(function (cell) {
       return cell === 0;
     })) {
       (0,_utils__WEBPACK_IMPORTED_MODULE_1__.toggleTurn)(gameState, setGameState);
-    }
+    } // add logic to stop turn changing on first render:
+    // i.e. if all cells in bottom row are empty
+
   }, [boardState]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     if (gameState.currentPlayer === gameState.computer) {
@@ -702,8 +701,7 @@ function toggleTurn(gameState, setGameState) {
   }
 
   setGameState(_objectSpread(_objectSpread({}, gameState), {}, {
-    currentPlayer: nextPlayer,
-    message: 'howdy'
+    currentPlayer: nextPlayer
   }));
 }
 
@@ -785,8 +783,7 @@ function checkPlayersRespondingMove(boardState, gameState) {
 
 function gameOver(setGameState, setMessageState, gameState) {
   setGameState(_objectSpread(_objectSpread({}, gameState), {}, {
-    gameOver: true,
-    message: 'hello'
+    gameOver: true
   }));
   var winnerMsg = '';
 

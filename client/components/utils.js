@@ -141,8 +141,7 @@ export function toggleTurn (gameState, setGameState) {
   }
   setGameState({
     ...gameState,
-    currentPlayer: nextPlayer,
-    message: 'howdy'
+    currentPlayer: nextPlayer
   })
 }
 
@@ -218,8 +217,7 @@ function checkPlayersRespondingMove (boardState, gameState) {
 export function gameOver (setGameState, setMessageState, gameState) {
   setGameState({
     ...gameState,
-    gameOver: true,
-    message: 'hello'
+    gameOver: true
   })
   let winnerMsg = ''
 
