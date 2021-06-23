@@ -99,6 +99,10 @@ export function computersTurn (boardState, gameState, setBoardState, setGameStat
   let result = false
   let column = 0
 
+  if (gameState.gameOver) {
+    return
+  }
+
   setTimeout(() => {
     const winningMove = checkForWinningMove(boardState, gameState.computer)
     const blockingMove = checkForPlayersWinningMove(boardState, gameState)
@@ -137,7 +141,8 @@ export function toggleTurn (gameState, setGameState) {
   }
   setGameState({
     ...gameState,
-    currentPlayer: nextPlayer
+    currentPlayer: nextPlayer,
+    message: 'howdy'
   })
 }
 
@@ -210,11 +215,32 @@ function checkPlayersRespondingMove (boardState, gameState) {
   return availableColumns
 }
 
+export function gameOver (setGameState, setMessageState, gameState) {
+  setGameState({
+    ...gameState,
+    gameOver: true,
+    message: 'hello'
+  })
+  let winnerMsg = ''
+
+  if (gameState.currentPlayer === 1) {
+    winnerMsg = 'You Win'
+  } else {
+    winnerMsg = 'Computer Wins'
+  }
+
+  setMessageState(`Game Over! ${winnerMsg}!`)
+}
+
 // ------Implementing some AI------
 // Step 1: determine how many columns are available to play
 // >> const possibleMoves = [col1, col2, col4, col5, col6]
 // Step 2: check if any of those options will cause computer to win, if so, make that move
 // Step 3: check if player could win next move, if so, block them
 // Step 4: check if any of those moves will allow player to win. if so, don't make that move.
+// Step5: if there are no suitable moves, the computer won't make a move. Need to update so that if the only available columns will allow the player to win, then pick one of those at random
+// Annouce the winner in the message
+
 // >> TODO:
-// Currently, if there are no suitable moves, the computer won't make a move. Need to update so that if the only available columns will allow the player to win, then pick one of those at random
+// Make game stop once somebody wins
+// Stop game when board is full

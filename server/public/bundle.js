@@ -167,8 +167,8 @@ var initialGameState = {
   player: 1,
   computer: 2,
   currentPlayer: 1,
-  gameOver: false,
-  message: ''
+  gameOver: false // message: ''
+
 };
 var initialBoardState = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]];
 
@@ -190,7 +190,7 @@ function Board() {
 
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     if ((0,_utils__WEBPACK_IMPORTED_MODULE_1__.checkForWin)(boardState, gameState.currentPlayer)) {
-      setMessageState('GAME OVER!'); // TODO: implement gameOver function and call it here
+      (0,_utils__WEBPACK_IMPORTED_MODULE_1__.gameOver)(setGameState, setMessageState, gameState);
     } // add logic to stop turn changing on first render:
     // i.e. if all cells in bottom row are empty
 
@@ -209,11 +209,14 @@ function Board() {
 
   function handleClick(row, col) {
     if (gameState.currentPlayer === gameState.computer) {
-      // disables consequence of clicking if it is computers turn]
+      // disables effect of clicking if it is computers turn
       return;
     }
 
-    (0,_utils__WEBPACK_IMPORTED_MODULE_1__.addToken)(col, gameState.player, setBoardState, boardState); // toggleTurn(gameState, setGameState)
+    if (!gameState.gameOver) {
+      (0,_utils__WEBPACK_IMPORTED_MODULE_1__.addToken)(col, gameState.player, setBoardState, boardState);
+    } // toggleTurn(gameState, setGameState)
+
   }
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Message__WEBPACK_IMPORTED_MODULE_3__.default, {
@@ -536,7 +539,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "addToken": () => (/* binding */ addToken),
 /* harmony export */   "checkForWin": () => (/* binding */ checkForWin),
 /* harmony export */   "computersTurn": () => (/* binding */ computersTurn),
-/* harmony export */   "toggleTurn": () => (/* binding */ toggleTurn)
+/* harmony export */   "toggleTurn": () => (/* binding */ toggleTurn),
+/* harmony export */   "gameOver": () => (/* binding */ gameOver)
 /* harmony export */ });
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
@@ -651,6 +655,11 @@ function checkDiagonalAscending(boardState, colour) {
 function computersTurn(boardState, gameState, setBoardState, setGameState) {
   var result = false;
   var column = 0;
+
+  if (gameState.gameOver) {
+    return;
+  }
+
   setTimeout(function () {
     var winningMove = checkForWinningMove(boardState, gameState.computer);
     var blockingMove = checkForPlayersWinningMove(boardState, gameState);
@@ -693,7 +702,8 @@ function toggleTurn(gameState, setGameState) {
   }
 
   setGameState(_objectSpread(_objectSpread({}, gameState), {}, {
-    currentPlayer: nextPlayer
+    currentPlayer: nextPlayer,
+    message: 'howdy'
   }));
 }
 
@@ -771,14 +781,33 @@ function checkPlayersRespondingMove(boardState, gameState) {
   }
 
   return availableColumns;
+}
+
+function gameOver(setGameState, setMessageState, gameState) {
+  setGameState(_objectSpread(_objectSpread({}, gameState), {}, {
+    gameOver: true,
+    message: 'hello'
+  }));
+  var winnerMsg = '';
+
+  if (gameState.currentPlayer === 1) {
+    winnerMsg = 'You Win';
+  } else {
+    winnerMsg = 'Computer Wins';
+  }
+
+  setMessageState("Game Over! ".concat(winnerMsg, "!"));
 } // ------Implementing some AI------
 // Step 1: determine how many columns are available to play
 // >> const possibleMoves = [col1, col2, col4, col5, col6]
 // Step 2: check if any of those options will cause computer to win, if so, make that move
 // Step 3: check if player could win next move, if so, block them
 // Step 4: check if any of those moves will allow player to win. if so, don't make that move.
+// Step5: if there are no suitable moves, the computer won't make a move. Need to update so that if the only available columns will allow the player to win, then pick one of those at random
+// Annouce the winner in the message
 // >> TODO:
-// Currently, if there are no suitable moves, the computer won't make a move. Need to update so that if the only available columns will allow the player to win, then pick one of those at random
+// Make game stop once somebody wins
+// Stop game when board is full
 
 /***/ }),
 
