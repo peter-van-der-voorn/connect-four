@@ -712,7 +712,8 @@ function findAvailableColumns(boardState) {
     col ? possibleMoves.push(false) : possibleMoves.push(true);
   });
   return possibleMoves;
-}
+} // returns the column in which if the token is placed, that player will win. if no winning move is found, returns -1
+
 
 function checkForWinningMove(boardState, player) {
   var possibleMoves = findAvailableColumns(boardState);
@@ -755,22 +756,53 @@ function addTestToken(col, colour, testBoard) {
 function checkPlayersRespondingMove(boardState, gameState) {
   var availableColumns = findAvailableColumns(boardState);
 
-  var testBoard = _toConsumableArray(boardState);
+  var testBoard = _toConsumableArray(boardState); // iterate over the columns, placing a token in each and checking if the player has a winning move because of it
+
 
   for (var col = 0; col < availableColumns.length; col++) {
     var row = findLowestCell(col, testBoard);
 
     if (row >= 0) {
       // add the token:
-      testBoard[row][col] = gameState.computer; // TODO: create array of players possible responding moves
-      // iterate through array and checkForWinningMove(testBoard, gameState.player)
-      // and if any of those checkForWins return a value >= 0, update  the col index in availableColumns array to false
-      // const respondingMoves = findAvailableColumns(testBoard)
+      testBoard[row][col] = gameState.computer; // const respondingMoves = findAvailableColumns(testBoard)
 
       var winningMove = checkForWinningMove(testBoard, gameState.player);
 
       if (winningMove >= 0) {
         availableColumns[col] = false;
+      } else {
+        var playersRespondingMoves = findAvailableColumns(testBoard);
+
+        for (var playerColumn = 0; playerColumn < playersRespondingMoves.length; playerColumn++) {
+          var playerRow = findLowestCell(playerColumn, testBoard);
+
+          if (playerRow >= 0) {
+            // add the players token:
+            testBoard[playerRow][playerColumn] = gameState.player; // check if computer has a winning response
+            // checkForWinningMove(testBoard, gameState.computer)
+
+            var computersRespondingMoves = findAvailableColumns(testBoard);
+
+            for (var computerColumn = 0; computerColumn < computersRespondingMoves.length; computerColumn++) {
+              var computerRow = findLowestCell(computerColumn, testBoard);
+
+              if (computerRow >= 0) {
+                // add the computers token:
+                testBoard[computerRow][computerColumn] = gameState.computer; // check if player can win:
+
+                if (checkForWinningMove(testBoard, gameState.player) > -1) {
+                  availableColumns[computerColumn] = false;
+                } // remove the computers token:
+
+
+                testBoard[computerRow][computerColumn] = 0;
+              }
+            } // remove the players token
+
+
+            testBoard[playerRow][playerColumn] = 0;
+          }
+        }
       } // take the token out!
 
 
@@ -802,9 +834,14 @@ function gameOver(setGameState, setMessageState, gameState) {
 // Step 4: check if any of those moves will allow player to win. if so, don't make that move.
 // Step5: if there are no suitable moves, the computer won't make a move. Need to update so that if the only available columns will allow the player to win, then pick one of those at random
 // Annouce the winner in the message
-// >> TODO:
 // Make game stop once somebody wins
+// >> TODO:
 // Stop game when board is full
+// add button to reset the board
+// keep a tally of wins
+// add taunts from computer in messageState
+// add sound effects: dropping tokens, if column is full, when computer blocks, and winning
+//
 
 /***/ }),
 
