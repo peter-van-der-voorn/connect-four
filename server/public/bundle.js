@@ -662,6 +662,7 @@ function computersTurn(boardState, gameState, setBoardState, setGameState) {
     var nines = [];
     var eights = [];
     var sevens = [];
+    var sixes = [];
     var fives = [];
     var ones = [];
     var zeros = [];
@@ -677,6 +678,10 @@ function computersTurn(boardState, gameState, setBoardState, setGameState) {
 
         case 7:
           sevens.push(index);
+          break;
+
+        case 6:
+          sixes.push(index);
           break;
 
         case 5:
@@ -700,6 +705,8 @@ function computersTurn(boardState, gameState, setBoardState, setGameState) {
       highest = eights;
     } else if (sevens.length > 0) {
       highest = sevens;
+    } else if (sixes.length > 0) {
+      highest = sixes;
     } else if (fives.length > 0) {
       highest = fives;
     } else if (ones.length > 0) {
@@ -709,81 +716,9 @@ function computersTurn(boardState, gameState, setBoardState, setGameState) {
     }
 
     var column = highest[Math.floor(Math.random() * highest.length)];
-    addToken(column, gameState.computer, setBoardState, boardState); // column = moves.findIndex(element => element === 9)
-    // if (column > -1) {
-    //   console.log('found a nine at ', column)
-    //   addToken(column, gameState.computer, setBoardState, boardState)
-    //   return
-    // }
-    // column = moves.findIndex(element => element === 8)
-    // if (column > -1) {
-    //   console.log('found an eight  at ', column)
-    //   addToken(column, gameState.computer, setBoardState, boardState)
-    //   return
-    // }
-    // column = moves.findIndex(element => element === 7)
-    // if (column > -1) {
-    //   console.log('found a seven at ', column)
-    //   addToken(column, gameState.computer, setBoardState, boardState)
-    //   return
-    // }
-    // column = moves.findIndex(element => element === 5)
-    // if (column > -1) {
-    //   console.log('found a 5 at ', column)
-    //   addToken(column, gameState.computer, setBoardState, boardState)
-    //   return
-    // }
-    // column = moves.findIndex(element => element === 1)
-    // if (column > -1) {
-    //   console.log('found a 1 at ', column)
-    //   addToken(column, gameState.computer, setBoardState, boardState)
-    //   return
-    // }
-    // column = moves.findIndex(element => element === 0)
-    // if (column > -1) {
-    //   console.log('found a zero at ', column)
-    //   addToken(column, gameState.computer, setBoardState, boardState)
-    // }
+    addToken(column, gameState.computer, setBoardState, boardState);
   }, 900);
-} // ********************************************************
-// here's the prev version of computersTurn, revert to this if everything breaks!
-// export function computersTurn (boardState, gameState, setBoardState, setGameState) {
-//   let result = false
-//   let column = 0
-//   if (gameState.gameOver) {
-//     return
-//   }
-//   setTimeout(() => {
-//     // First, check if there's a winning move available:
-//     const winningMove = checkForWinningMove(boardState, gameState.computer)
-//     const blockingMove = checkForPlayersWinningMove(boardState, gameState)
-//     if (winningMove >= 0) {
-//       console.log('GOTCHA')
-//       column = winningMove
-//       // Second, check if computer can block the player from wining on the players next turn:
-//     } else if (blockingMove >= 0) {
-//       console.log('BLOCKED YA')
-//       column = blockingMove
-//       // check if at least one column is available that doesnt cause player to win, if yes, pick one of those columns at random:
-//     } else if (!checkPlayersRespondingMove(boardState, gameState).every(value => value === false)) {
-//       const suitableMoves = checkPlayersRespondingMove(boardState, gameState)
-//       console.log('suitable moves: ', suitableMoves)
-//       do {
-//         column = Math.floor(Math.random() * 7)
-//         result = suitableMoves[column]
-//       } while (result === false)
-//       // if no suitable columns to pick from, randomly pick an available column:
-//     } else {
-//       const availableColumns = findAvailableColumns(boardState)
-//       do {
-//         column = Math.floor(Math.random() * 7)
-//         result = availableColumns[column]
-//       } while (result === -1)
-//     }
-//     addToken(column, gameState.computer, setBoardState, boardState)
-//   }, 900)
-// }
-
+}
 function toggleTurn(gameState, setGameState) {
   var nextPlayer = 0;
 
@@ -823,11 +758,10 @@ function checkForWinningMove(boardState, player) {
 
   return -1;
 } // returns a value of col if there is a way to block the player, otherwise returns -1
+// function checkForPlayersWinningMove (boardState, gameState) {
+//   return checkForWinningMove(boardState, gameState.player)
+// }
 
-
-function checkForPlayersWinningMove(boardState, gameState) {
-  return checkForWinningMove(boardState, gameState.player);
-}
 
 function addTestToken(col, colour, testBoard) {
   var row = findLowestCell(col, testBoard); // add the token:
@@ -844,67 +778,54 @@ function addTestToken(col, colour, testBoard) {
   testBoard[row][col] = 0;
   return false;
 } // returns an array e.g. [true, true, false, false, true, true, false], where the false elements represent the columns which are either full, or will allow the player to win on their next move
-
-
-function checkPlayersRespondingMove(boardState, gameState) {
-  var availableColumns = findAvailableColumns(boardState);
-
-  var testBoard = _toConsumableArray(boardState); // iterate over the columns, placing a token in each and checking if the player has a winning move because of it
-
-
-  for (var col = 0; col < availableColumns.length; col++) {
-    var row = findLowestCell(col, testBoard);
-
-    if (row >= 0) {
-      // add the token:
-      testBoard[row][col] = gameState.computer; // const respondingMoves = findAvailableColumns(testBoard)
-
-      var winningMove = checkForWinningMove(testBoard, gameState.player);
-
-      if (winningMove >= 0) {
-        availableColumns[col] = false;
-      } else {
-        var playersRespondingMoves = findAvailableColumns(testBoard);
-
-        for (var playerColumn = 0; playerColumn < playersRespondingMoves.length; playerColumn++) {
-          var playerRow = findLowestCell(playerColumn, testBoard);
-
-          if (playerRow >= 0) {
-            // add the players token:
-            testBoard[playerRow][playerColumn] = gameState.player; // check if computer has a winning response
-            // checkForWinningMove(testBoard, gameState.computer)
-
-            var computersRespondingMoves = findAvailableColumns(testBoard);
-
-            for (var computerColumn = 0; computerColumn < computersRespondingMoves.length; computerColumn++) {
-              var computerRow = findLowestCell(computerColumn, testBoard);
-
-              if (computerRow >= 0) {
-                // add the computers token:
-                testBoard[computerRow][computerColumn] = gameState.computer; // check if player can win:
-
-                if (checkForWinningMove(testBoard, gameState.player) > -1) {
-                  availableColumns[computerColumn] = false;
-                } // remove the computers token:
-
-
-                testBoard[computerRow][computerColumn] = 0;
-              }
-            } // remove the players token
-
-
-            testBoard[playerRow][playerColumn] = 0;
-          }
-        }
-      } // take the token out!
-
-
-      testBoard[row][col] = 0;
-    }
-  }
-
-  return availableColumns;
-} // this function works out the consequences for each possible move, and returns an array which represents the priority of each move
+// function checkPlayersRespondingMove (boardState, gameState) {
+//   const availableColumns = findAvailableColumns(boardState)
+//   const testBoard = [...boardState]
+//   // iterate over the columns, placing a token in each and checking if the player has a winning move because of it
+//   for (let col = 0; col < availableColumns.length; col++) {
+//     const row = findLowestCell(col, testBoard)
+//     if (row >= 0) {
+//       // add the token:
+//       testBoard[row][col] = gameState.computer
+//       // const respondingMoves = findAvailableColumns(testBoard)
+//       const winningMove = checkForWinningMove(testBoard, gameState.player)
+//       if (winningMove >= 0) {
+//         availableColumns[col] = false
+//       } else {
+//         const playersRespondingMoves = findAvailableColumns(testBoard)
+//         for (let playerColumn = 0; playerColumn < playersRespondingMoves.length; playerColumn++) {
+//           const playerRow = findLowestCell(playerColumn, testBoard)
+//           if (playerRow >= 0) {
+//             // add the players token:
+//             testBoard[playerRow][playerColumn] = gameState.player
+//             // check if computer has a winning response
+//             // checkForWinningMove(testBoard, gameState.computer)
+//             const computersRespondingMoves = findAvailableColumns(testBoard)
+//             for (let computerColumn = 0; computerColumn < computersRespondingMoves.length; computerColumn++) {
+//               const computerRow = findLowestCell(computerColumn, testBoard)
+//               if (computerRow >= 0) {
+//               // add the computers token:
+//                 testBoard[computerRow][computerColumn] = gameState.computer
+//                 // check if player can win:
+//                 if (checkForWinningMove(testBoard, gameState.player) > -1) {
+//                   availableColumns[computerColumn] = false
+//                 }
+//                 // remove the computers token:
+//                 testBoard[computerRow][computerColumn] = 0
+//               }
+//             }
+//             // remove the players token
+//             testBoard[playerRow][playerColumn] = 0
+//           }
+//         }
+//       }
+//       // take the token out!
+//       testBoard[row][col] = 0
+//     }
+//   }
+//   return availableColumns
+// }
+// this function works out the consequences for each possible move, and returns an array which represents the priority of each move
 // *******IMPORTANT NOTE********
 // ****priorities 5 & 7 may need to be switched around, see how gameplay goes...****
 //
@@ -958,26 +879,34 @@ function analyseMoves(boardState, gameState) {
 
       if (checkForWinningMove(testBoard, gameState.player) >= 0) {
         // if yes, assign that index the value of 0
-        moves[col] = 0; // next check if placing that token allows computer to win next turn (3 out of 4 in place)
+        moves[col] = 0; // next check if placing that token could allow computer to win next turn (3 out of 4 in place)
       } else if (checkForWinningMove(testBoard, gameState.computer) >= 0) {
         moves[col] = 7; // next check if after placing that token, there is a chance the player could set computer up to win next turn
       } else {
-        for (var playerColumn = 0; playerColumn < moves.length; playerColumn++) {
-          var playerRow = findLowestCell(playerColumn, testBoard);
+        var guaranteedWinColumns = guaranteedWin(testBoard, gameState);
 
-          if (playerRow > -1) {
-            // place a player test token
-            testBoard[playerRow][playerColumn] = gameState.player; // check if the players responding move allows computer to win next turn:
+        if (guaranteedWinColumns.length > 0) {
+          guaranteedWinColumns.forEach(function (column) {
+            moves[column] = 6;
+          });
+        } else {
+          for (var playerColumn = 0; playerColumn < moves.length; playerColumn++) {
+            var playerRow = findLowestCell(playerColumn, testBoard);
 
-            if (checkForWinningMove(testBoard, gameState.computer) >= 0) {
-              moves[col] = 5;
-            } // remove players test token:
+            if (playerRow > -1) {
+              // place a player test token
+              testBoard[playerRow][playerColumn] = gameState.player; // check if the players responding move allows computer to win next turn:
+
+              if (checkForWinningMove(testBoard, gameState.computer) >= 0) {
+                moves[col] = 5;
+              } // remove players test token:
 
 
-            testBoard[playerRow][[playerColumn]] = 0;
+              testBoard[playerRow][[playerColumn]] = 0;
+            }
           }
         }
-      } // remove test token
+      } // remove computers test token
 
 
       testBoard[row][col] = 0;
@@ -985,6 +914,38 @@ function analyseMoves(boardState, gameState) {
   }
 
   return moves;
+} // this function will work out if there is a move the player can choose that will guarantee a win. will return an array of moves (e.g. [0, 4, 5], each element represents the index of the move that will lead to the guaranteed win)
+
+
+function guaranteedWin(board, gameState) {
+  var colsToGuaranteeWin = [];
+
+  for (var col = 0; col < board[0].length; col++) {
+    var row = findLowestCell(col, board);
+
+    if (row > -1) {
+      (function () {
+        // add a player token:
+        board[row][col] = gameState.player; // check the resulting board for winning options
+
+        var count = 0;
+        checkForWinningMoves(board, gameState.player).forEach(function (move) {
+          if (move) {
+            count++; // increment counter for each winning move
+          }
+        }); // if count >= 2, then need to keep track of what move the player did to allow multiple winning moves (col)
+
+        if (count >= 2) {
+          colsToGuaranteeWin.push(col);
+        } // remove the test token:
+
+
+        board[row][col] = 0;
+      })();
+    }
+  }
+
+  return colsToGuaranteeWin;
 } // returns an array, where true represents a winning move that could be played, otherwise false
 
 
