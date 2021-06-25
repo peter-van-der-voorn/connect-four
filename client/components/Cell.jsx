@@ -1,7 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 
-function Cell ({ state, handleClick, row, col }) {
+function Cell ({ state, handleClick, row, col, handleMouseEnter, hoveredColumnState, handlemouseOut }) {
   const circleClass = classNames(
     'circle',
     {
@@ -10,12 +10,15 @@ function Cell ({ state, handleClick, row, col }) {
     })
 
   const cellClass = classNames(
-    'grid-item'
+    'grid-item',
+    {
+      hover: (hoveredColumnState === col)
+    }
   )
 
   return (
     <div className={cellClass} >
-      <div className={circleClass} onClick={() => handleClick(row, col)} />
+      <div className={circleClass} onClick={() => handleClick(row, col)} onMouseEnter={() => handleMouseEnter(col)} onMouseOut={() => handlemouseOut(col)}/>
     </div>
   )
 }

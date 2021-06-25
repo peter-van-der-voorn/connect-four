@@ -1,13 +1,3 @@
-import useSound from 'use-sound'
-
-//
-//  LET THERE BE SFX!
-//
-
-// import token1Sfx from '../../server/public/audio/token-1.mp3'
-
-// const [playToken1] = useSound(token1Sfx)
-
 // Returns the lowest available cell. If column is full, returns -1
 export function findLowestCell (col, boardState) {
   for (let row = 0; row < boardState.length; row++) {

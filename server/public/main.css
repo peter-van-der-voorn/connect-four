@@ -23,6 +23,12 @@ h1 {
     background-color: rgb(35, 105, 197);
 }
 
+.hover {
+    background-color: rgb(10, 81, 173);
+}
+
+
+
 .circle {
     background-color: rgb(242, 242, 243);
     width: 80%;
