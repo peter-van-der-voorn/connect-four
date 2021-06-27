@@ -17,6 +17,8 @@ h1 {
     grid-template-columns: repeat(7, 7vw);
     grid-template-rows: repeat(6, 7vw);
     margin-left: 29vw;
+    cursor: url("./token-cursor.png"), auto;
+
 }
 
 .grid-item {
