@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { addToken, checkForWin, computersTurn, gameOver, toggleTurn } from './utils'
+import { addToken, boardFull, checkForWin, computersTurn, draw, gameOver, toggleTurn } from './utils'
 
 import Cell from './Cell'
 import Message from './Message'
+import ResetButton from './ResetButton'
 
 const initialGameState = {
   player: 1,
@@ -22,12 +23,12 @@ const emptyBoardState = [
 ]
 
 const initialBoardState = [
-  [0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0],
-  [1, 1, 0, 0, 0, 0, 0],
-  [1, 1, 1, 0, 0, 0, 0],
-  [1, 1, 1, 0, 1, 1, 1]
+  [0, 0, 0, 1, 2, 2, 1],
+  [0, 1, 1, 2, 2, 1, 1],
+  [2, 2, 2, 1, 1, 2, 2],
+  [1, 1, 2, 2, 2, 1, 1],
+  [2, 1, 1, 1, 2, 1, 1],
+  [1, 1, 1, 2, 1, 1, 1]
 ]
 
 function Board () {
@@ -39,6 +40,9 @@ function Board () {
   useEffect(() => {
     if (checkForWin(boardState, gameState.currentPlayer)) {
       gameOver(setGameState, setMessageState, gameState)
+    } else if (boardFull(boardState)) {
+      console.log("it's a draw")
+      draw(gameState, setGameState, setMessageState)
     } else if (!boardState[5].every(cell => cell === 0)) {
       toggleTurn(gameState, setGameState)
     }
@@ -122,8 +126,9 @@ function Board () {
         <Cell state={boardState[5][4]} row={5} col={4} handleClick={handleClick} handleMouseEnter={handleMouseEnter} hoveredColumnState={hoveredColumnState} handlemouseOut={handlemouseOut} />
         <Cell state={boardState[5][5]} row={5} col={5} handleClick={handleClick} handleMouseEnter={handleMouseEnter} hoveredColumnState={hoveredColumnState} handlemouseOut={handlemouseOut} />
         <Cell state={boardState[5][6]} row={5} col={6} handleClick={handleClick} handleMouseEnter={handleMouseEnter} hoveredColumnState={hoveredColumnState} handlemouseOut={handlemouseOut} />
-
       </div>
+      <ResetButton setBoardState={setBoardState}/>
+
     </>
   )
 }

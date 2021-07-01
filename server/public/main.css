@@ -5,6 +5,13 @@ body {
     text-align: center;
 }
 
+ul {
+    text-align: start;
+}
+h2 {
+    text-align: start;
+}
+
 h1 {
     font-size: 100px;
     margin-top: 30px;
@@ -14,9 +21,9 @@ h1 {
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(7, 7vw);
-    grid-template-rows: repeat(6, 7vw);
-    margin-left: 29vw;
+    grid-template-columns: repeat(7, 6vw);
+    grid-template-rows: repeat(6, 6vw);
+    margin-left: 25vw;
     cursor: url("./token-cursor.png"), auto;
 
 }

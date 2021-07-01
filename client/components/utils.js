@@ -420,6 +420,24 @@ export function gameOver (setGameState, setMessageState, gameState) {
   setMessageState(`Game Over! ${winnerMsg}!`)
 }
 
+export function boardFull (boardState) {
+  const columns = findAvailableColumns(boardState)
+  console.log(columns)
+
+  if (columns.every(column => column === false)) {
+    return true
+  }
+  return false
+}
+
+export function draw (gameState, setGameState, setMessageState) {
+  setGameState({
+    ...gameState,
+    gameOver: true
+  })
+  setMessageState("It's a draw!")
+}
+
 // ------Implementing some AI------
 // Step 1: determine how many columns are available to play
 // >> const possibleMoves = [col1, col2, col4, col5, col6]

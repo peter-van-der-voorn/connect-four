@@ -118,6 +118,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils */ "./client/components/utils.js");
 /* harmony import */ var _Header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Header */ "./client/components/Header.jsx");
 /* harmony import */ var _Board__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Board */ "./client/components/Board.jsx");
+/* harmony import */ var _Description__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Description */ "./client/components/Description.jsx");
+
 
 
 
@@ -125,7 +127,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function App() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Header__WEBPACK_IMPORTED_MODULE_2__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Board__WEBPACK_IMPORTED_MODULE_3__.default, null));
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Header__WEBPACK_IMPORTED_MODULE_2__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Board__WEBPACK_IMPORTED_MODULE_3__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Description__WEBPACK_IMPORTED_MODULE_4__.default, null));
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (App);
@@ -147,6 +149,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils */ "./client/components/utils.js");
 /* harmony import */ var _Cell__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Cell */ "./client/components/Cell.jsx");
 /* harmony import */ var _Message__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Message */ "./client/components/Message.jsx");
+/* harmony import */ var _ResetButton__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ResetButton */ "./client/components/ResetButton.jsx");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -163,6 +166,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var initialGameState = {
   player: 1,
   computer: 2,
@@ -171,7 +175,7 @@ var initialGameState = {
 
 };
 var emptyBoardState = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0]];
-var initialBoardState = [[0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0], [1, 1, 0, 0, 0, 0, 0], [1, 1, 1, 0, 0, 0, 0], [1, 1, 1, 0, 1, 1, 1]];
+var initialBoardState = [[0, 0, 0, 1, 2, 2, 1], [0, 1, 1, 2, 2, 1, 1], [2, 2, 2, 1, 1, 2, 2], [1, 1, 2, 2, 2, 1, 1], [2, 1, 1, 1, 2, 1, 1], [1, 1, 1, 2, 1, 1, 1]];
 
 function Board() {
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(initialGameState),
@@ -197,6 +201,9 @@ function Board() {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     if ((0,_utils__WEBPACK_IMPORTED_MODULE_1__.checkForWin)(boardState, gameState.currentPlayer)) {
       (0,_utils__WEBPACK_IMPORTED_MODULE_1__.gameOver)(setGameState, setMessageState, gameState);
+    } else if ((0,_utils__WEBPACK_IMPORTED_MODULE_1__.boardFull)(boardState)) {
+      console.log("it's a draw");
+      (0,_utils__WEBPACK_IMPORTED_MODULE_1__.draw)(gameState, setGameState, setMessageState);
     } else if (!boardState[5].every(function (cell) {
       return cell === 0;
     })) {
@@ -571,7 +578,9 @@ function Board() {
     handleMouseEnter: handleMouseEnter,
     hoveredColumnState: hoveredColumnState,
     handlemouseOut: handlemouseOut
-  })));
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_ResetButton__WEBPACK_IMPORTED_MODULE_4__.default, {
+    setBoardState: setBoardState
+  }));
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Board);
@@ -630,6 +639,28 @@ function Cell(_ref) {
 
 /***/ }),
 
+/***/ "./client/components/Description.jsx":
+/*!*******************************************!*\
+  !*** ./client/components/Description.jsx ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+
+function Description() {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, " Todo:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("del", null, "Recognise a draw when board is full")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Add 'Reset' button"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Keep Tally of wins"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Keep track of num. of moves"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Add taunts from computer"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Player can (optionally) enter their name for personalised taunts"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Sound Effects"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Add 'How To Play'"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Deploy to web (www.connect4.click)"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Monetise with GoogleAds")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Refactoring:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Split computersTurn() into multiple functions"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Iterate to build the Cell components")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Round edges of board"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null, "Improve cursor"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", null)));
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Description);
+
+/***/ }),
+
 /***/ "./client/components/Header.jsx":
 /*!**************************************!*\
   !*** ./client/components/Header.jsx ***!
@@ -675,6 +706,28 @@ function Message(_ref) {
 
 /***/ }),
 
+/***/ "./client/components/ResetButton.jsx":
+/*!*******************************************!*\
+  !*** ./client/components/ResetButton.jsx ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+
+function ResetButton() {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", null, "Reset Board");
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ResetButton);
+
+/***/ }),
+
 /***/ "./client/components/utils.js":
 /*!************************************!*\
   !*** ./client/components/utils.js ***!
@@ -689,7 +742,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "checkForWin": () => (/* binding */ checkForWin),
 /* harmony export */   "computersTurn": () => (/* binding */ computersTurn),
 /* harmony export */   "toggleTurn": () => (/* binding */ toggleTurn),
-/* harmony export */   "gameOver": () => (/* binding */ gameOver)
+/* harmony export */   "gameOver": () => (/* binding */ gameOver),
+/* harmony export */   "boardFull": () => (/* binding */ boardFull),
+/* harmony export */   "draw": () => (/* binding */ draw)
 /* harmony export */ });
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
@@ -1135,6 +1190,24 @@ function gameOver(setGameState, setMessageState, gameState) {
   }
 
   setMessageState("Game Over! ".concat(winnerMsg, "!"));
+}
+function boardFull(boardState) {
+  var columns = findAvailableColumns(boardState);
+  console.log(columns);
+
+  if (columns.every(function (column) {
+    return column === false;
+  })) {
+    return true;
+  }
+
+  return false;
+}
+function draw(gameState, setGameState, setMessageState) {
+  setGameState(_objectSpread(_objectSpread({}, gameState), {}, {
+    gameOver: true
+  }));
+  setMessageState("It's a draw!");
 } // ------Implementing some AI------
 // Step 1: determine how many columns are available to play
 // >> const possibleMoves = [col1, col2, col4, col5, col6]
