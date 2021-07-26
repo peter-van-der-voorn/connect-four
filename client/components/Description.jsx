@@ -6,7 +6,8 @@ function Description () {
       <h2> Todo:</h2>
       <ul>
         <li><del>Recognise a draw when board is full</del></li>
-        <li>Add 'Reset' button</li>
+        <li>Add functionality to Reset button</li>
+        <li>Add 'Control to Centre' strategy to AI</li>
         <li>Keep Tally of wins</li>
         <li>Keep track of num. of moves</li>
         <li>Add taunts from computer</li>
