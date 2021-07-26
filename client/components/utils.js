@@ -313,7 +313,7 @@ function analyseMoves (boardState, gameState) {
   }
 
   // add 0 to the indices of moves array if playing that column will allow player to win on their next turn:
-  // iterate through moves array -> if element === 1 (not already allocated), place a token in the etst bpard, and then check if player can win. if yes, then ass 0 to that index of moves
+  // iterate through moves array -> if element === 1 (not already allocated), place a token in the test bpard, and then check if player can win. if yes, then add 0 to that index of moves
 
   for (let col = 0; col < moves.length; col++) {
     const row = findLowestCell(col, testBoard)
