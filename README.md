@@ -7,7 +7,7 @@ My take on the 1974 Milton Bradley classic Connect Four game
 * Clone down the repo
 
   ```sh
-  git clone https://github.com/matai-2021/knex-todo-cli.git
+  git clone https://github.com/peter-van-der-voorn/connect-four.git
   ```
 
 * Install dependencies
